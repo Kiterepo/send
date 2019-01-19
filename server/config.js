@@ -80,6 +80,11 @@ const conf = convict({
     arg: 'port',
     env: 'PORT'
   },
+  amplitude_id: {
+    format: String,
+    default: '08d9aaeeee2a9547438cafe3a128a1a3',
+    env: 'AMPLITUDE_ID'
+  },
   analytics_id: {
     format: String,
     default: '',

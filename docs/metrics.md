@@ -46,13 +46,13 @@ Please see, **See Amplitude HTTP API**(https://amplitude.zendesk.com/hc/en-us/ar
 
 ### Event Structure
 
-* `app_version` **string** ∙ app version `Android 1.5` or `Web 1.2.5`
+* `app_version` **string** ∙ app version
 * `country` **string** ∙ Can be captured using [FxA Geo Library](https://github.com/mozilla/fxa-geodb)
 * `device_id` **string** ∙ required, should be a unique hash
 * `event_properties` **dictionary** ∙ [see list below](#event-properties)
 * `event_type` **string** ∙ [see list below](#events)
-* `insert_id` **string** ∙ unique event id used by amplitude to dedupe events
 * `language` **string** ∙ App language
+* `platform` **string** ∙ `web` or `android`
 * `os_name` **string** ∙ `Mac OS X`, `iOS`, `Windows`, etc.
 * `os_version` **string** ∙ `10.01`, `400`, etc
 * `region` **string** ∙ Can be captured using [FxA Geo Library](https://github.com/mozilla/fxa-geodb)
@@ -69,7 +69,6 @@ Please see, **See Amplitude HTTP API**(https://amplitude.zendesk.com/hc/en-us/ar
 * `Total upload size` **float** ∙ running sum of total MB uploaded
 * `Total downloads` **num** ∙ running count of bundles downloaded
 * `Total download size` **float** ∙ running sum of total MB downloaded
-* `Total clients` **num** ∙ running tally of total clients sharing a UID
 * `Current uploads` **int** ∙ count of current unexpired files
 * `User agent Browser` **string** ∙ browser or if app `App` derived from UA string
 * `User Agent version` **string** ∙ browser version or if app `App Version` derived from UA string
@@ -96,8 +95,7 @@ Please see, **See Amplitude HTTP API**(https://amplitude.zendesk.com/hc/en-us/ar
 12. `FxA prompt trigger` **string** ∙ One of `time options`, `count options`, `bundle size`, `shoulder button`
 13. `Location of URL copy` **string** ∙ Where did the user copy the share url `success-screen` or `upload-list`
 14. `Site exit path` **string** ∙ Name of external link followed ... `download-firefox`, `twitter`, `github`, `cookies`, `terms`, `privacy`, `about`, `legal`, `mozilla`
-15. `Expiry reason` **string** ∙ one of `time limit hit`, `download limit hit`, `user deleted`
-16. `Error code` **String** ∙ Error code if added
+15. `Error code` **String** ∙ Error code if added
 
 ### Event Types
 
@@ -106,14 +104,14 @@ Please see, **See Amplitude HTTP API**(https://amplitude.zendesk.com/hc/en-us/ar
 | Event | Event Properties | Description |
 |-------|------------------|-------------|
 | `{ Uploader, Downloader, Unsupported } - visit` | `none` | When a user visits the site, or opens the app, grouped by interface at open. Note, a number of API properties and User Properties should be set with this event |
-|`{ Uploader, Downloader, Unsupported } - exit` | `none` | When a user exits the site via click event on a link that directs to another domain |
-| `Uploader - start bundle upload` | `1, 2, 3, 4, 6, 7, 8, 16 (if applicable)` | When a user begins to upload a bundle for the site |
-| `Uploader - stop bundle upload` | `1, 2, 3, 4, 5, 6, 7, 8, 11, 16 (if applicable)` | When a user stops an upload or an upload stops for any reason |
+|`{ Uploader, Downloader, Unsupported } - exit` | `14` | When a user exits the site via click event on a link that directs to another domain |
+| `Uploader - start bundle upload` | `1, 2, 3, 4, 6, 7, 8` | When a user begins to upload a bundle for the site |
+| `Uploader - stop bundle upload` | `1, 2, 3, 4, 5, 6, 7, 8, 11, 15 (if applicable)` | When a user stops an upload or an upload stops for any reason |
 | `Uploader - delete bundle` | `1, 2, 3, 4, 6, 7, 8, 9, 10` | When a user deletes their bundle |
 | `Uploader - copy bundle url` | `1, 13` | When a user copies the url of a bundle they create |
 | `Uploader - dismiss copy bundle dialog` | `1` | When a user dismisses the bundle copy dialog |
-| `{ Uploader, Downloader } - start bundle download` | `1, 2, 3, 4, 6, 7, 8, 9, 10, 16 (if applicable)` | When a user begins to download a bundle. Remaining downloads should be decremented after event. |
-| `{ Uploader, Downloader } - stop bundle download` | `1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 16 (if applicable)` | When a a download ends for any reason |
+| `{ Uploader, Downloader } - start bundle download` | `1, 2, 3, 4, 6, 7, 8, 9, 10` | When a user begins to download a bundle. Remaining downloads should be decremented after event. |
+| `{ Uploader, Downloader } - stop bundle download` | `1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 15 (if applicable)` | When a a download ends for any reason |
 | `Downloader - click try send cta` | `1` | When a downloader clicks the prompt to try Firefox Send |
 | `Downloader - unlock bundle success` | `1` | When a downloader successfully unlocks a file |
 | `Downloader - unlock bundle failure` | `1` | When a downloader fails to unlock a file (only send once per session) |
@@ -121,5 +119,4 @@ Please see, **See Amplitude HTTP API**(https://amplitude.zendesk.com/hc/en-us/ar
 | `Signup - interact with email` | `12` | when a user inputs anything into the email submission form |
 | `Signup - cancel signup` | `12` | When a user opts out of signing up |
 | `Signup - submit signup` | `12` | When a user submits a sign up to fxa and we begin OAuth dance |
-| `Server - expire bundle` | `1, 2, 3, 4, 6, 7, 8, 9, 10, 15` | when the server expires a bundle for any reason |
-| `Error` | `16` | Fallback event for any errors that occur. Use the error code event property to specify an error type |
+| `Error` | `15` | Fallback event for any errors that occur. Use the error code event property to specify an error type |
